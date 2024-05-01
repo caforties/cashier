@@ -1,14 +1,55 @@
 import 'package:flutter/material.dart';
-import 'package:kasir/admin/kelola-petugas/kelola-petugas.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class EditPetugas extends StatelessWidget {
-  const EditPetugas({Key? key}) : super(key: key);
+class EditPetugas extends StatefulWidget {
+  final DocumentSnapshot<Map<String, dynamic>> document;
+  final String documentId;
+
+  const EditPetugas(
+      {Key? key, required this.document, required this.documentId})
+      : super(key: key);
+
+  @override
+  _EditPetugasState createState() => _EditPetugasState();
+}
+
+class _EditPetugasState extends State<EditPetugas> {
+  TextEditingController nomor_kasirController = TextEditingController();
+  TextEditingController nama_kasirController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.document != null) {
+      final data = widget.document.data();
+      if (data != null) {
+        nomor_kasirController.text = data['nomor_kasir'] ?? '';
+        nama_kasirController.text = data['nama_kasir'] ?? '';
+        emailController.text = data['email'] ?? '';
+        passwordController.text = data['password'] ?? '';
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    nomor_kasirController.dispose();
+    nama_kasirController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Petugas'),
+        title: Text('Petugas',
+            style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(30),
@@ -20,8 +61,7 @@ class EditPetugas extends StatelessWidget {
               children: [
                 Text(
                   'Nomor Petugas',
-                  style: TextStyle(
-                    // Apply Poppins font here
+                  style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.normal,
                     color: Colors.grey,
@@ -36,14 +76,16 @@ class EditPetugas extends StatelessWidget {
                     border: Border.all(color: Colors.grey, width: 1.0),
                   ),
                   child: TextField(
-                    style: TextStyle(
+                    controller: nomor_kasirController,
+                    style: GoogleFonts.poppins(
                       fontSize: 14,
-                      color: Colors.grey,
+                      color: Colors.black,
                     ),
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'masukkan nomor petugas',
-                      hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                      hintStyle:
+                          GoogleFonts.poppins(fontSize: 14, color: Colors.grey),
                       contentPadding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                     ),
@@ -56,7 +98,7 @@ class EditPetugas extends StatelessWidget {
             ),
             Text(
               'Nama Petugas',
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
                 color: Colors.grey,
@@ -71,14 +113,16 @@ class EditPetugas extends StatelessWidget {
                 border: Border.all(color: Colors.grey, width: 1.0),
               ),
               child: TextField(
-                style: TextStyle(
+                controller: nama_kasirController,
+                style: GoogleFonts.poppins(
                   fontSize: 14,
                   color: Colors.black,
                 ),
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'masukkan nama petugas',
-                  hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                  hintStyle:
+                      GoogleFonts.poppins(fontSize: 14, color: Colors.grey),
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                 ),
@@ -89,7 +133,7 @@ class EditPetugas extends StatelessWidget {
             ),
             Text(
               'Email',
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
                 color: Colors.grey,
@@ -104,14 +148,16 @@ class EditPetugas extends StatelessWidget {
                 border: Border.all(color: Colors.grey, width: 1.0),
               ),
               child: TextField(
-                style: TextStyle(
+                controller: emailController,
+                style: GoogleFonts.poppins(
                   fontSize: 14,
                   color: Colors.black,
                 ),
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'masukkan email',
-                  hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                  hintStyle:
+                      GoogleFonts.poppins(fontSize: 14, color: Colors.grey),
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                 ),
@@ -122,7 +168,7 @@ class EditPetugas extends StatelessWidget {
             ),
             Text(
               'Password',
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
                 color: Colors.grey,
@@ -137,14 +183,16 @@ class EditPetugas extends StatelessWidget {
                 border: Border.all(color: Colors.grey, width: 1.0),
               ),
               child: TextField(
-                style: TextStyle(
+                controller: passwordController,
+                style: GoogleFonts.poppins(
                   fontSize: 14,
                   color: Colors.black,
                 ),
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'masukkan password',
-                  hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                  hintStyle:
+                      GoogleFonts.poppins(fontSize: 14, color: Colors.grey),
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                 ),
@@ -159,19 +207,15 @@ class EditPetugas extends StatelessWidget {
               margin: EdgeInsets.symmetric(horizontal: 15),
               child: FilledButton(
                 style: FilledButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 234, 90, 5),
+                  backgroundColor: Color(0xFFEA5A05),
                 ),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => KelolaPetugas()),
-                  );
+                  updatePetugasData();
                 },
                 child: Text(
                   'Simpan',
-                  style: TextStyle(
-                    // Apply Poppins font here
-                    fontSize: 14,
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -182,5 +226,34 @@ class EditPetugas extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void updatePetugasData() async {
+    try {
+      String nomorKasir = nomor_kasirController.text;
+      String nama_kasir = nama_kasirController.text;
+      String email = emailController.text;
+      String password = passwordController.text;
+
+      await FirebaseFirestore.instance
+          .collection('petugas')
+          .doc(widget.document.id)
+          .update({
+        'nomor_kasir': nomorKasir,
+        'nama_kasir': nama_kasir,
+        'email': email,
+        'password': password,
+      });
+
+      Navigator.pop(context);
+    } catch (e) {
+      print('Error updating data: $e');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to update data. Please try again.'),
+        ),
+      );
+    }
   }
 }

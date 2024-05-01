@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kasir/admin/kelola-barang/kelola-barang.dart';
 import 'package:kasir/admin/kelola-petugas/kelola-petugas.dart';
 import 'package:kasir/admin/laporan-transaksi/laporan-transaksi.dart';
@@ -24,11 +25,11 @@ class _HomeState extends State<Home> {
             Expanded(
               child: Container(
                 height: 100,
-                width: 300,
+                width: 350,
                 child: Image.asset(
                   'images/mycashier.jpg',
                   fit: BoxFit.contain,
-                ),
+                ), 
               ),
             ),
             IconButton(
@@ -37,7 +38,7 @@ class _HomeState extends State<Home> {
               },
               icon: Icon(
                 Icons.logout,
-                color: Color.fromARGB(255, 234, 90, 5),
+                color: Color(0xFFEA5A05),
               ),
             ),
           ],
@@ -48,7 +49,8 @@ class _HomeState extends State<Home> {
         child: ListView(
           children: [
             ListTile(
-              title: Text('Barang'),
+              leading: Icon(Icons.inventory_outlined,  color: Color(0xFFEA5A05),),
+              title: Text('Data Barang', style: GoogleFonts.poppins()),
               onTap: () {
                 Navigator.push(
                   context,
@@ -57,7 +59,8 @@ class _HomeState extends State<Home> {
               },
             ),
             ListTile(
-              title: Text('Petugas'),
+              leading: Icon(Icons.group_outlined,  color: Color(0xFFEA5A05),),
+              title: Text('Petugas', style: GoogleFonts.poppins()),
               onTap: () {
                 Navigator.push(
                   context,
@@ -66,16 +69,19 @@ class _HomeState extends State<Home> {
               },
             ),
             ListTile(
-              title: Text('Laporan Transaksi'),
+              leading: Icon(Icons.history_outlined,  color: Color(0xFFEA5A05),),
+              title: Text('Riwayat Transaksi', style: GoogleFonts.poppins()),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LaporanTransaksi()),
+                  MaterialPageRoute(
+                      builder: (context) => RiwayatTransaksiPage()),
                 );
               },
             ),
             ListTile(
-              title: Text('Member'),
+              leading: Icon(Icons.person_2_outlined,  color: Color(0xFFEA5A05),),
+              title: Text('Member', style: GoogleFonts.poppins()),
               onTap: () {
                 Navigator.push(
                   context,
@@ -94,8 +100,12 @@ class _HomeState extends State<Home> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Logout"),
-          content: Text("Anda yakin ingin logout?"),
+          title: Text(
+            "Logout",
+            style: GoogleFonts.poppins(),
+          ),
+          content:
+              Text("Anda yakin ingin logout?", style: GoogleFonts.poppins()),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -106,19 +116,19 @@ class _HomeState extends State<Home> {
               },
               child: Text(
                 "Ya",
-                style: TextStyle(
-                  color: Color.fromARGB(255, 234, 90, 5),
+                style: GoogleFonts.poppins(
+                  color: Color(0xFFEA5A05),
                 ),
               ),
             ),
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // Close the dialog
+                Navigator.pop(context);
               },
               child: Text(
                 "Tidak",
-                style: TextStyle(
-                  color: Color.fromARGB(255, 234, 90, 5),
+                style: GoogleFonts.poppins(
+                  color: Color(0xFFEA5A05),
                 ),
               ),
             ),

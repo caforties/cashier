@@ -1,14 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:kasir/petugas/kelola-member/kelola-member.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class EditMember extends StatelessWidget {
-  const EditMember({Key? key}) : super(key: key);
+class EditMember extends StatefulWidget {
+  final DocumentSnapshot<Map<String, dynamic>> document;
+  final String documentId;
+
+  const EditMember({Key? key, required this.document, required this.documentId})
+      : super(key: key);
+
+  @override
+  _EditMemberState createState() => _EditMemberState();
+}
+
+class _EditMemberState extends State<EditMember> {
+  TextEditingController nama_memberController = TextEditingController();
+  TextEditingController nomor_teleponController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.document != null) {
+      final data = widget.document.data();
+      if (data != null) {
+        nama_memberController.text = data['nama_member'] ?? '';
+        nomor_teleponController.text = data['nomor_telepon'] ?? '';
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    nama_memberController.dispose();
+    nomor_teleponController.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Member'),
+        title: Text(
+          'Edit Member',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(30),
@@ -20,8 +57,7 @@ class EditMember extends StatelessWidget {
               children: [
                 Text(
                   'Nama Member',
-                  style: TextStyle(
-                    // Apply Poppins font here
+                  style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.normal,
                     color: Colors.grey,
@@ -36,14 +72,18 @@ class EditMember extends StatelessWidget {
                     border: Border.all(color: Colors.grey, width: 1.0),
                   ),
                   child: TextField(
-                    style: TextStyle(
+                    controller: nama_memberController,
+                    style: GoogleFonts.poppins(
                       fontSize: 14,
-                      color: Colors.grey,
+                      color: Colors.black,
                     ),
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'masukkan nama member',
-                      hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                      hintStyle: GoogleFonts.poppins(
+                        fontSize: 14,
+                        color: Colors.black,
+                      ),
                       contentPadding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                     ),
@@ -55,8 +95,8 @@ class EditMember extends StatelessWidget {
               height: 20,
             ),
             Text(
-              'Nomor telepon',
-              style: TextStyle(
+              'Nomor Telepon',
+              style: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
                 color: Colors.grey,
@@ -71,14 +111,18 @@ class EditMember extends StatelessWidget {
                 border: Border.all(color: Colors.grey, width: 1.0),
               ),
               child: TextField(
-                style: TextStyle(
+                controller: nomor_teleponController,
+                style: GoogleFonts.poppins(
                   fontSize: 14,
                   color: Colors.black,
                 ),
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'masukkan nomor telepon',
-                  hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                  hintStyle: GoogleFonts.poppins(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                 ),
@@ -96,14 +140,12 @@ class EditMember extends StatelessWidget {
                   backgroundColor: Color.fromARGB(255, 234, 90, 5),
                 ),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => KelolaMember()),
-                  );
+                  updateMemberData();
                 },
                 child: Text(
                   'Simpan',
-                  style: TextStyle(
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -114,5 +156,30 @@ class EditMember extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void updateMemberData() async {
+    try {
+      String nama_member = nama_memberController.text;
+      String nomor_telepon = nomor_teleponController.text;
+
+      await FirebaseFirestore.instance
+          .collection('member')
+          .doc(widget.document.id)
+          .update({
+        'nama_member': nama_member,
+        'nomor_telepon': nomor_telepon,
+      });
+
+      Navigator.pop(context);
+    } catch (e) {
+      print('Error updating data: $e');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to update data. Please try again.'),
+        ),
+      );
+    }
   }
 }

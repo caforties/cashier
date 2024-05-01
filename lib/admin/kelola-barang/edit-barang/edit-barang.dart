@@ -1,14 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:kasir/admin/kelola-barang/kelola-barang.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class EditBarang extends StatelessWidget {
-  const EditBarang({Key? key}) : super(key: key);
+class EditBarang extends StatefulWidget {
+  final DocumentSnapshot<Map<String, dynamic>> document;
+  final String documentId;
+
+  const EditBarang({
+    Key? key,
+    required this.document,
+    required this.documentId,
+  }) : super(key: key);
+
+  @override
+  _EditBarangState createState() => _EditBarangState();
+}
+
+class _EditBarangState extends State<EditBarang> {
+  TextEditingController kode_barangController = TextEditingController();
+  TextEditingController nama_barangController = TextEditingController();
+  TextEditingController hargaController = TextEditingController();
+  TextEditingController stokController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.document != null) {
+      final data = widget.document.data();
+      if (data != null) {
+        kode_barangController.text = data['kode_barang'] ?? '';
+        nama_barangController.text = data['nama_barang'] ?? '';
+        hargaController.text = data['harga'] ?? '';
+        stokController.text = data['stok'] ?? '';
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    kode_barangController.dispose();
+    nama_barangController.dispose();
+    hargaController.dispose();
+    stokController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    TextStyle poppinsTextStyle = GoogleFonts.poppins(
+      fontSize: 14,
+      fontWeight: FontWeight.normal,
+      color: Colors.grey,
+    );
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Barang'),
+        title: Text(
+          'Edit Barang',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(30),
@@ -18,15 +68,10 @@ class EditBarang extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(
-                  'Kode barang',
-                  style: TextStyle(
-                    // Apply Poppins font here
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.grey,
-                  ),
-                ),
+                Text('Kode Barang',
+                    style: GoogleFonts.poppins(
+                      color: Colors.grey,
+                    )),
                 const SizedBox(height: 7),
                 Container(
                   width: double.infinity,
@@ -36,14 +81,12 @@ class EditBarang extends StatelessWidget {
                     border: Border.all(color: Colors.grey, width: 1.0),
                   ),
                   child: TextField(
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                    ),
+                    controller: kode_barangController,
+                    style: GoogleFonts.poppins(color: Colors.black),
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'masukkan kode barang',
-                      hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                      hintStyle: GoogleFonts.poppins(),
                       contentPadding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                     ),
@@ -54,14 +97,10 @@ class EditBarang extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            Text(
-              'Nama barang',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.normal,
-                color: Colors.grey,
-              ),
-            ),
+            Text('Nama Barang',
+                style: GoogleFonts.poppins(
+                  color: Colors.grey,
+                )),
             const SizedBox(height: 7),
             Container(
               width: double.infinity,
@@ -71,14 +110,12 @@ class EditBarang extends StatelessWidget {
                 border: Border.all(color: Colors.grey, width: 1.0),
               ),
               child: TextField(
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black,
-                ),
+                controller: nama_barangController,
+                style: GoogleFonts.poppins(color: Colors.black),
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'masukkan nama barang',
-                  hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                  hintStyle: GoogleFonts.poppins(),
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                 ),
@@ -87,14 +124,10 @@ class EditBarang extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            Text(
-              'Harga',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.normal,
-                color: Colors.grey,
-              ),
-            ),
+            Text('Harga',
+                style: GoogleFonts.poppins(
+                  color: Colors.grey,
+                )),
             const SizedBox(height: 7),
             Container(
               width: double.infinity,
@@ -104,14 +137,12 @@ class EditBarang extends StatelessWidget {
                 border: Border.all(color: Colors.grey, width: 1.0),
               ),
               child: TextField(
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black,
-                ),
-                decoration: InputDecoration(
+                controller: hargaController,
+                style: GoogleFonts.poppins(color: Colors.black),
+                decoration: InputDecoration( 
                   border: InputBorder.none,
-                  hintText: 'masukkan harga',
-                  hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                  hintText: 'Rp. 0',
+                  hintStyle: GoogleFonts.poppins(),
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                 ),
@@ -120,14 +151,7 @@ class EditBarang extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            Text(
-              'Stok',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.normal,
-                color: Colors.grey,
-              ),
-            ),
+            Text('Stok', style: GoogleFonts.poppins(color: Colors.grey)),
             const SizedBox(height: 7),
             Container(
               width: double.infinity,
@@ -137,14 +161,12 @@ class EditBarang extends StatelessWidget {
                 border: Border.all(color: Colors.grey, width: 1.0),
               ),
               child: TextField(
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black,
-                ),
+                controller: stokController,
+                style: GoogleFonts.poppins(color: Colors.black),
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: 'stok',
-                  hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                  hintText: 'masukkan jumlah stok',
+                  hintStyle: GoogleFonts.poppins(),
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                 ),
@@ -157,21 +179,17 @@ class EditBarang extends StatelessWidget {
               width: 400,
               height: 55,
               margin: EdgeInsets.symmetric(horizontal: 15),
-              child: FilledButton(
-                style: FilledButton.styleFrom(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
                   backgroundColor: Color.fromARGB(255, 234, 90, 5),
                 ),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => KelolaBarang()),
-                  );
+                  updateBarangData();
                 },
                 child: Text(
                   'Simpan',
-                  style: TextStyle(
-                    // Apply Poppins font here
-                    fontSize: 14,
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -182,5 +200,33 @@ class EditBarang extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void updateBarangData() async {
+    try {
+      String kode_barang = kode_barangController.text;
+      String nama_barang = nama_barangController.text;
+      String harga = hargaController.text;
+      String stok = stokController.text;
+
+      await FirebaseFirestore.instance
+          .collection('barang')
+          .doc(widget.document.id)
+          .update({
+        'kode_barang': kode_barang,
+        'nama_barang': nama_barang,
+        'harga': harga,
+        'stok': stok,
+      });
+
+      Navigator.pop(context);
+    } catch (e) {
+      print('Error updating data: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Gagal memperbarui data. Silakan coba lagi.'),
+        ),
+      );
+    }
   }
 }

@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kasir/admin/home/home.dart';
 import 'package:kasir/admin/register/register.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:kasir/petugas/home/petugas-home.dart';
 
 class Login extends StatefulWidget {
+  const Login({Key? key}) : super(key: key);
+ 
   @override
   _LoginState createState() => _LoginState();
 }
@@ -11,33 +15,101 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<void> _signInWithEmailAndPassword(BuildContext context) async {
     try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-      // Jika login berhasil, lanjutkan ke halaman beranda
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Home()),
-      );
+      final String email = _emailController.text.trim();
+      final String password = _passwordController.text.trim();
+
+      if (email.isNotEmpty && password.isNotEmpty) {
+        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+
+        // Memeriksa apakah email pengguna adalah admin
+        if (userCredential.user != null) {
+          // Jika email admin, navigasikan ke halaman Home
+          if (email == 'admin@gmail.com') {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => Home(),
+              ),
+            );
+          } else {
+            // Jika bukan email admin, navigasikan ke halaman HomePetugas
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => HomePetugas(),
+              ),
+            );
+          }
+        } else {
+          // Jika userCredential.user null, tampilkan pesan kesalahan
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text(
+                  'Error',
+                  style: GoogleFonts.poppins(),
+                ),
+                content: Text(
+                  'Login Gagal. Cek kembali Email dan Password Anda.',
+                  style: GoogleFonts.poppins(),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'OK',
+                      style: GoogleFonts.poppins(
+                        color: Color(0xFFEA5A05),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      } else {
+        // Jika email atau password kosong, tampilkan pesan kesalahan
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text('Error'),
+              content: const Text('Please enter both email and password.'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            );
+          },
+        );
+      }
     } catch (e) {
-      // Tangani kesalahan yang mungkin terjadi selama proses login
+      // Jika terjadi kesalahan, tampilkan pesan kesalahan
       showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Error'),
-            content: Text('Login gagal. Silakan coba lagi.'),
+            title: const Text('Error'),
+            content: const Text('Login failed. Please check your credentials.'),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );
@@ -50,10 +122,10 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(30),
         child: ListView(
           children: [
-            SizedBox(height: 10),
+            const SizedBox(height: 15),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,7 +144,7 @@ class _LoginState extends State<Login> {
                   child: Center(
                     child: Text(
                       'Masuk',
-                      style: TextStyle(
+                      style: GoogleFonts.poppins(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
@@ -80,100 +152,103 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(height: 15),
                 Container(
-                  width: 400,
-                  height: 55,
+                  width: double.infinity,
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
+                    borderRadius: BorderRadius.circular(25),
                     color: const Color.fromRGBO(255, 255, 255, 1),
-                    border: Border.all(color: Colors.black45, width: 1.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: TextField(
-                      controller: _emailController,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                      ),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'masukkan email',
-                        hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
-                        contentPadding: EdgeInsets.only(left: 10),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10),
-                Container(
-                  width: 400,
-                  height: 55,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
-                    color: Colors.white,
                     border: Border.all(color: Colors.grey, width: 1.0),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: TextField(
-                      controller: _passwordController,
-                      style: TextStyle(
+                  child: TextField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'email',
+                      hintStyle: GoogleFonts.poppins(
                         fontSize: 14,
-                        color: Colors.black,
+                        color: Colors.grey,
                       ),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'password',
-                        hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
-                        contentPadding: EdgeInsets.only(left: 10),
-                      ),
-                      obscureText: true,
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                     ),
                   ),
-                ),
-                SizedBox(height: 15),
-                Container(
-                  width: 400,
-                  height: 50,
-                  margin: EdgeInsets.symmetric(horizontal: 15),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 234, 90, 5),
-                    ),
-                    onPressed: () => _signInWithEmailAndPassword(context),
-                    child: Text(
-                      'masuk',
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    ),
+                )
+              ],
+            ),
+            const SizedBox(height: 25),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(25),
+                color: const Color.fromRGBO(255, 255, 255, 1),
+                border: Border.all(color: Colors.grey, width: 1.0),
+              ),
+              child: TextField(
+                controller: _passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'kata sandi',
+                  hintStyle: GoogleFonts.poppins(
+                    fontSize: 14,
+                    color: Colors.grey,
                   ),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                 ),
-                SizedBox(height: 20),
-                GestureDetector(
+              ),
+            ),
+            const SizedBox(height: 30),
+            Container(
+              width: double.infinity,
+              height: 60,
+              margin: const EdgeInsets.symmetric(horizontal: 15),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFFEA5A05),
+                ),
+                onPressed: () {
+                  _signInWithEmailAndPassword(context);
+                },
+                child: Text(
+                  'Masuk',
+                  style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Belum Punya Akun?',
+                  style: GoogleFonts.poppins(fontSize: 14, color: Colors.black),
+                ),
+                InkWell(
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Register()),
+                      MaterialPageRoute(
+                        builder: (context) => Register(),
+                      ),
                     );
                   },
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Belum punya akun? ',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: 'Daftar',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Color.fromARGB(255, 234, 90, 5),
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ],
+                  child: Text(
+                    'Daftar',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: Color.fromARGB(255, 234, 90, 5),
                     ),
                   ),
                 ),

@@ -1,14 +1,41 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kasir/admin/kelola-barang/kelola-barang.dart';
 
-class TambahBarang extends StatelessWidget {
+class TambahBarang extends StatefulWidget {
   const TambahBarang({Key? key}) : super(key: key);
+
+  @override
+  _TambahBarangState createState() => _TambahBarangState();
+}
+
+class _TambahBarangState extends State<TambahBarang> {
+  TextEditingController kode_barangController = TextEditingController();
+  TextEditingController nama_barangController = TextEditingController();
+  TextEditingController hargaController = TextEditingController();
+  TextEditingController stokController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    kode_barangController.dispose();
+    nama_barangController.dispose();
+    hargaController.dispose();
+    stokController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tambah Barang'),
+        title: Text(
+          'Tambah Barang',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(30),
@@ -19,9 +46,8 @@ class TambahBarang extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  'Kode barang',
-                  style: TextStyle(
-                    // Apply Poppins font here
+                  'Kode Barang',
+                  style: GoogleFonts.poppins(
                     fontSize: 14,
                     fontWeight: FontWeight.normal,
                     color: Colors.grey,
@@ -36,14 +62,16 @@ class TambahBarang extends StatelessWidget {
                     border: Border.all(color: Colors.grey, width: 1.0),
                   ),
                   child: TextField(
-                    style: TextStyle(
+                    controller: kode_barangController,
+                    style: GoogleFonts.poppins(
                       fontSize: 14,
-                      color: Colors.grey,
+                      color: Colors.black,
                     ),
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'masukkan kode barang',
-                      hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                      hintStyle:
+                          GoogleFonts.poppins(fontSize: 14, color: Colors.grey),
                       contentPadding:
                           EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                     ),
@@ -55,8 +83,8 @@ class TambahBarang extends StatelessWidget {
               height: 20,
             ),
             Text(
-              'Nama barang',
-              style: TextStyle(
+              'Nama Barang',
+              style: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
                 color: Colors.grey,
@@ -71,14 +99,16 @@ class TambahBarang extends StatelessWidget {
                 border: Border.all(color: Colors.grey, width: 1.0),
               ),
               child: TextField(
-                style: TextStyle(
+                controller: nama_barangController,
+                style: GoogleFonts.poppins(
                   fontSize: 14,
                   color: Colors.black,
                 ),
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'masukkan nama barang',
-                  hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                  hintStyle:
+                      GoogleFonts.poppins(fontSize: 14, color: Colors.grey),
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                 ),
@@ -89,7 +119,7 @@ class TambahBarang extends StatelessWidget {
             ),
             Text(
               'Harga',
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
                 color: Colors.grey,
@@ -104,14 +134,16 @@ class TambahBarang extends StatelessWidget {
                 border: Border.all(color: Colors.grey, width: 1.0),
               ),
               child: TextField(
-                style: TextStyle(
+                controller: hargaController,
+                style: GoogleFonts.poppins(
                   fontSize: 14,
                   color: Colors.black,
                 ),
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: 'masukkan harga',
-                  hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                  hintText: 'Rp. 0',
+                  hintStyle:
+                      GoogleFonts.poppins(fontSize: 14, color: Colors.grey),
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                 ),
@@ -122,7 +154,7 @@ class TambahBarang extends StatelessWidget {
             ),
             Text(
               'Stok',
-              style: TextStyle(
+              style: GoogleFonts.poppins(
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
                 color: Colors.grey,
@@ -134,17 +166,19 @@ class TambahBarang extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: const Color.fromRGBO(255, 255, 255, 1),
-                border: Border.all(color: Colors.grey, width: 1.0),
+                border: Border.all(color: Colors.grey, width: 1.0), 
               ),
               child: TextField(
-                style: TextStyle(
+                controller: stokController,
+                style: GoogleFonts.poppins(
                   fontSize: 14,
                   color: Colors.black,
                 ),
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: 'stok',
-                  hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
+                  hintText: 'masukkan stok',
+                  hintStyle:
+                      GoogleFonts.poppins(fontSize: 14, color: Colors.grey),
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                 ),
@@ -153,27 +187,31 @@ class TambahBarang extends StatelessWidget {
             SizedBox(
               height: 20,
             ),
-            Container(
-              width: 400,
-              height: 55,
-              margin: EdgeInsets.symmetric(horizontal: 15),
-              child: FilledButton(
-                style: FilledButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 234, 90, 5),
+            InkWell(
+              onTap: () {
+                _addDataToFirestore();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => KelolaBarang(),
+                  ),
+                );
+              },
+              child: Container(
+                width: double.infinity,
+                height: 50,
+                margin: const EdgeInsets.symmetric(horizontal: 15),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 234, 90, 5),
+                  borderRadius: BorderRadius.circular(25),
                 ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => KelolaBarang()),
-                  );
-                },
-                child: Text(
-                  'Simpan',
-                  style: TextStyle(
-                    // Apply Poppins font here
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                child: Center(
+                  child: Text(
+                    'Simpan',
+                    style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
@@ -182,5 +220,39 @@ class TambahBarang extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _addDataToFirestore() async {
+    try {
+      final maxIndex = await _getMaxIndex();
+      final newIndex = maxIndex + 1;
+
+      await FirebaseFirestore.instance.collection('barang').add({
+        'index': newIndex,
+        'kode_barang': kode_barangController.text,
+        'nama_barang': nama_barangController.text,
+        'harga': hargaController.text,
+        'stok': stokController.text,
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error adding data to Firestore: $e');
+      }
+    }
+  }
+
+  Future<int> _getMaxIndex() async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('barang')
+        .orderBy('index', descending: true)
+        .limit(1)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      final maxIndex = querySnapshot.docs.first['index'] as int;
+      return maxIndex;
+    } else {
+      return 0;
+    }
   }
 }

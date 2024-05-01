@@ -1,205 +1,167 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:kasir/admin/home/home.dart';
-import 'package:kasir/admin/login/login.dart'; // Ganti dengan import halaman beranda yang sesuai
+import 'package:kasir/admin/login/login.dart';
+import 'package:google_fonts/google_fonts.dart'; // Import Google Fonts
 
-class Register extends StatefulWidget {
+class Register extends StatelessWidget {
   const Register({Key? key}) : super(key: key);
 
-  @override
-  _RegisterState createState() => _RegisterState();
-}
-
-class _RegisterState extends State<Register> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  Future<void> _signUp(String email, String password) async {
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      print('User registered: ${userCredential.user!.uid}');
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    String _email = '';
+    String _password = '';
+
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(30),
         child: ListView(
           children: [
-            SizedBox(
-              height: 10,
+            const SizedBox(height: 15),
+            Center(
+              child: Text(
+                'Daftar',
+                style: GoogleFonts.poppins(
+                  // Menggunakan Poppins sebagai gaya teks
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
             ),
+            const SizedBox(height: 40),
             Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                const SizedBox(height: 15),
                 Container(
-                  width: 350,
-                  height: 80,
+                  width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                    border: Border.all(
-                      color: Colors.white,
-                      width: 1.0,
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Daftar',
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  width: 400,
-                  height: 55,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
+                    borderRadius: BorderRadius.circular(25),
                     color: const Color.fromRGBO(255, 255, 255, 1),
-                    border: Border.all(color: Colors.black45, width: 1.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0), // Menambahkan padding horizontal
-                    child: TextField(
-                      controller: _emailController,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                      ),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'email',
-                        hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
-                        contentPadding: EdgeInsets.only(
-                            left: 10), // Menyesuaikan padding kiri
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  width: 400,
-                  height: 55,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
-                    color: Colors.white,
                     border: Border.all(color: Colors.grey, width: 1.0),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0), // Menambahkan padding horizontal
-                    child: TextField(
-                      controller: _passwordController,
-                      style: TextStyle(
+                  child: TextField(
+                    onChanged: (value) {
+                      _email = value;
+                    },
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'email',
+                      hintStyle: GoogleFonts.poppins(
                         fontSize: 14,
-                        color: Colors.black,
+                        color: Colors.grey,
                       ),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: 'password',
-                        hintStyle: TextStyle(fontSize: 14, color: Colors.grey),
-                        contentPadding: EdgeInsets.only(
-                            left: 10), // Menyesuaikan padding kiri
-                      ),
-                      obscureText: true,
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 17),
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 15,
-                ),
+                const SizedBox(height: 25),
                 Container(
-                  width: 400,
-                  height: 55,
-                  margin: EdgeInsets.symmetric(horizontal: 15),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: const Color.fromRGBO(255, 255, 255, 1),
+                    border: Border.all(color: Colors.grey, width: 1.0),
+                  ),
+                  child: TextField(
+                    onChanged: (value) {
+                      _password = value;
+                    },
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'kata sandi',
+                      hintStyle: GoogleFonts.poppins(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 17),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Container(
+                  width: double.infinity,
+                  height: 60,
+                  margin: const EdgeInsets.symmetric(horizontal: 15),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 234, 90, 5),
+                      backgroundColor: Color(0xFFEA5A05),
                     ),
-                    onPressed: () => _register(context),
+                    onPressed: () {
+                      _signUp(_email, _password);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Login(),
+                        ),
+                      );
+                    },
                     child: Text(
                       'Daftar',
-                      style: TextStyle(
-                        fontSize: 14,
+                      style: GoogleFonts.poppins(
+                        fontSize: 18,
+                        color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        color: const Color.fromARGB(255, 255, 255, 255),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Login()),
-                    );
-                  },
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Sudah Punya Akun? ',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: 'Masuk',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Color.fromARGB(255, 234, 90, 5),
-                            decoration: TextDecoration.underline,
+                const SizedBox(height: 15),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Sudah Punya Akun?',
+                      style: GoogleFonts.poppins(
+                          fontSize: 14, color: Colors.black),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Login(),
                           ),
+                        );
+                      },
+                      child: Text(
+                        'Masuk',
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          color: Color.fromARGB(255, 234, 90, 5),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
     );
-  }
-
-  // Fungsi untuk melakukan proses register
-  void _register(BuildContext context) async {
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
-      // Jika registrasi berhasil, lanjutkan ke halaman beranda atau halaman lain yang diinginkan
-      // Misalnya:
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => Home()), // Ganti 'Home()' dengan halaman tujuan setelah registrasi berhasil
-      );
-    } catch (e) {
-      // Tangani kesalahan yang mungkin terjadi selama proses registrasi
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('Error'),
-            content: Text('Registrasi gagal. Silakan coba lagi.'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    }
   }
 }

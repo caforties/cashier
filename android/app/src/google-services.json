@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "777914117172",
-    "project_id": "mycashier-c4274",
-    "storage_bucket": "mycashier-c4274.appspot.com"
+    "project_number": "1001603939843",
+    "project_id": "ujikom-27947",
+    "storage_bucket": "ujikom-27947.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:777914117172:android:b03c9ef7c8a8098eddae61",
+        "mobilesdk_app_id": "1:1001603939843:android:4ee73d2fed960111d6d836",
         "android_client_info": {
           "package_name": "com.example.kasir"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyC1loqQKrjgk6zdN6lmA09ANHDNWYwnmJI"
+          "current_key": "AIzaSyAb8PXNI2b47s_x2x_2ZfbKKhJ2IUPkjM4"
         }
       ],
       "services": {

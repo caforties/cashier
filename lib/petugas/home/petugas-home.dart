@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kasir/admin/laporan-transaksi/laporan-transaksi.dart';
 import 'package:kasir/admin/login/login.dart';
 import 'package:kasir/petugas/data-barang/lihat-barang.dart';
@@ -10,71 +11,100 @@ class HomePetugas extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false, // Hapus tombol kembali
-        title: Row(
-          mainAxisAlignment:
-              MainAxisAlignment.center, // Posisikan gambar di tengah
-          children: [
-            Expanded(
-              child: Container(
-                height: 100,
-                width: 300,
-                child: Image.asset(
-                  'images/mycashier.jpg', // Ubah dengan path gambar logo Anda
-                  fit: BoxFit
-                      .contain, // Sesuaikan ukuran gambar agar sesuai dengan container
+    return DefaultTextStyle(
+      style: GoogleFonts.poppins(), // Menggunakan font Poppins secara default
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Container(
+                  height: 100,
+                  width: 350,
+                  child: Image.asset(
+                    'images/mycashier.jpg',
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
-            ),
-            IconButton(
-              onPressed: () {
-                _showLogoutConfirmationDialog(context);
-              },
-              icon: Icon(
-                Icons.logout,
-                color: Color.fromARGB(255, 234, 90, 5),
-              ), // Icon logout
-            ),
-          ],
+              IconButton(
+                onPressed: () {
+                  _showLogoutConfirmationDialog(context);
+                },
+                icon: Icon(
+                  Icons.logout,
+                  color: Color(0xFFEA5A05),
+                ), // Icon logout
+              ),
+            ],
+          ),
         ),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: ListView(
-          children: [
-            ListTile(
-              title: Text('Data Barang'),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => LihatBarang()));
-              },
-            ),
-            ListTile(
-              title: Text('Transaksi'),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Transaksi()));
-              },
-            ),
-            ListTile(
-              title: Text('Laporan Transaksi'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => LaporanTransaksi()));
-              },
-            ),
-            ListTile(
-              title: Text('Member'),
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => KelolaMember()));
-              },
-            ),
-          ],
+        body: Padding(
+          padding: EdgeInsets.all(16),
+          child: ListView(
+            children: [
+              ListTile(
+                leading: Icon(
+                  Icons.inventory_outlined,
+                  color: Color(0xFFEA5A05),
+                ), // Icon untuk Data Barang
+                title: Text(
+                  'Data Barang',
+                  style: GoogleFonts.poppins(), // Menggunakan font Poppins
+                ),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => LihatBarang()));
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.shopping_cart_outlined,
+                  color: Color(0xFFEA5A05),
+                ), // Icon untuk Transaksi
+                title: Text(
+                  'Transaksi',
+                  style: GoogleFonts.poppins(), // Menggunakan font Poppins
+                ),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Transaksi()));
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.history_outlined,
+                  color: Color(0xFFEA5A05),
+                ), // Icon untuk Riwayat Transaksi
+                title: Text(
+                  'Riwayat Transaksi',
+                  style: GoogleFonts.poppins(), // Menggunakan font Poppins
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => RiwayatTransaksiPage()));
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.group_outlined,
+                  color: Color(0xFFEA5A05),
+                ), // Icon untuk Member
+                title: Text(
+                  'Member',
+                  style: GoogleFonts.poppins(), // Menggunakan font Poppins
+                ),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => KelolaMember()));
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -85,34 +115,34 @@ class HomePetugas extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Logout"),
-          content: Text("Anda yakin ingin logout?"),
+          title: Text("Logout", style: GoogleFonts.poppins()),
+          content:
+              Text("Anda yakin ingin logout?", style: GoogleFonts.poppins()),
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.push(
+                // Navigasi langsung ke halaman login
+                Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (context) => Login()),
+                  (route) => false, // Hindari kembali ke halaman sebelumnya
                 );
               },
               child: Text(
                 "Ya",
-                style: TextStyle(
-                  color: Color.fromARGB(255, 234, 90, 5),
+                style: GoogleFonts.poppins(
+                  color: Color(0xFFEA5A05),
                 ),
               ),
             ),
             TextButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePetugas()),
-                );
+                Navigator.pop(context); // Tutup dialog jika tidak logout
               },
               child: Text(
                 "Tidak",
-                style: TextStyle(
-                  color: Color.fromARGB(255, 234, 90, 5),
+                style: GoogleFonts.poppins(
+                  color: Color(0xFFEA5A05),
                 ),
               ),
             ),
