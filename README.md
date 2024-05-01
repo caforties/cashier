@@ -15,3 +15,11 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
+# Login
+- Admin
+  email : admin@gmail.com
+  pass : admin1234
+
+- Petugas
+ email : kasir1@gmail.com
+ pass : kasir1234
